@@ -28,7 +28,7 @@ def _process(doc, tag, tag_value):
         tag_value = ''
 
     # Create a new node for simple values
-    if isinstance(tag_value, int) or isinstance(tag_value, (str, unicode)):
+    if isinstance(tag_value, int) or isinstance(tag_value, (str)):
         return _process_simple(doc, tag, tag_value)
 
     # Return a list of nodes with same tag
@@ -103,7 +103,7 @@ def _process_simple(doc, tag, tag_value):
     @return: node
     """
     node = doc.createElement(tag)
-    node.appendChild(doc.createTextNode(unicode(tag_value)))
+    node.appendChild(doc.createTextNode(str(tag_value)))
     return node
 
 def dict2xml(data, encoding='UTF-8'):
@@ -156,7 +156,7 @@ if __name__ == '__main__':
                                                          'id': '8'},
                                                'value': None}],},}}
 
-    print dict2xml(x)
+    print(dict2xml(x))
 
     x = {'prestashop': {'address': {'address1': '1 Infinite Loop',
                                 'address2': None,
@@ -192,7 +192,7 @@ if __name__ == '__main__':
                                                 },
     }}}
 
-    print dict2xml(x)
+    print(dict2xml(x))
 
     import xml2dict
     from prestapyt import PrestaShopWebService

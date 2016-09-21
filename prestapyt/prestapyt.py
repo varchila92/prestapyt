@@ -29,10 +29,10 @@ from xml.parsers.expat import ExpatError
 from distutils.version import LooseVersion
 try:
     from xml.etree import cElementTree as ElementTree
-except ImportError, e:
+except ImportError as e:
     from xml.etree import ElementTree
 
-from .version import __author__, __version__
+# from .version import __author__, __version__
 
 
 class PrestaShopWebServiceError(Exception):
@@ -60,7 +60,7 @@ class PrestaShopWebService(object):
     """
 
     MIN_COMPATIBLE_VERSION = '1.4.0.17'
-    MAX_COMPATIBLE_VERSION = '1.5.9.0'
+    MAX_COMPATIBLE_VERSION = '1.6.1.6'
 
     def __init__(self, api_url, api_key, debug=False, headers=None, client_args=None):
         """
@@ -181,7 +181,7 @@ class PrestaShopWebService(object):
             self.http_client.follow_all_redirects = True
 
         if self.debug:
-            print "Execute url: %s / method: %s" % (url, method)
+            print("Execute url: %s / method: %s" % (url, method))
 
         request_headers = self.headers.copy()
         request_headers.update(add_headers)
@@ -209,7 +209,7 @@ class PrestaShopWebService(object):
 
         try:
             parsed_content = ElementTree.fromstring(content)
-        except ExpatError, err:
+        except ExpatError as err:
             raise PrestaShopWebServiceError('HTTP XML response is not parsable : %s' % (err,))
         except ElementTree.ParseError as e:
             raise PrestaShopWebServiceError('HTTP XML response is not parsable : %s. %s' % (e, content[:512]))
@@ -250,7 +250,7 @@ class PrestaShopWebService(object):
         """
         if self.debug:
             options.update({'debug': True})
-        return urllib.urlencode(options)
+        return urllib.parse.urlencode(options)
 
     def add(self, resource, content=None, files=None):
         """
@@ -453,7 +453,7 @@ class PrestaShopWebServiceDict(PrestaShopWebService):
             if not response:
                 return False
             if level > 0:
-                return dive(response[response.keys()[0]], level=level-1)
+                return dive(response[list(response.keys())[0]], level=level-1)
             return response
 
         # returned response looks like :
@@ -528,13 +528,13 @@ class PrestaShopWebServiceDict(PrestaShopWebService):
 
 if __name__ == '__main__':
     prestashop = PrestaShopWebServiceDict('http://localhost:8080/api',
-                                          'BVWPFFYBT97WKM959D7AVVD0M4815Y1L')
+                                          '74VJNCB3D89HQQMI7U1MHD7N7F8TJNF6')
     #prestashop.debug = True
 
     from pprint import pprint
 
-    pprint(prestashop.get(''))
-    pprint(prestashop.head(''))
+    # pprint(prestashop.get(''))
+    # pprint(prestashop.head(''))
 
     pprint(prestashop.search('addresses'))
     pprint(prestashop.search('addresses', options={'limit': 0}))
